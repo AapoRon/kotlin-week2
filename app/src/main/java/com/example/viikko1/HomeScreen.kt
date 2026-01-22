@@ -5,22 +5,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.viikko1.domain.*
-import java.time.LocalDate
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun HomeScreen() {
-
-    var tasks by remember { mutableStateOf(mockTasks) }
+fun HomeScreen(
+    taskViewModel: TaskViewModel = viewModel()
+) {
+    val tasks = taskViewModel.tasks.value
     var newTaskTitle by remember { mutableStateOf("") }
-    var filterMode by remember { mutableStateOf("ALL") }
-
-    val visibleTasks = when (filterMode) {
-        "DONE" -> filterByDone(tasks, true)
-        "UNDONE" -> filterByDone(tasks, false)
-        "SORT" -> sortByDueDate(tasks)
-        else -> tasks
-    }
 
     Column(
         modifier = Modifier
@@ -32,30 +24,6 @@ fun HomeScreen() {
             text = "Tehtävälista",
             style = MaterialTheme.typography.headlineMedium
         )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // 🔘 FILTER & SORT NAPIT
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(onClick = { filterMode = "SORT" }) {
-                Text("Sort by date")
-            }
-
-            Button(onClick = { filterMode = "DONE" }) {
-                Text("Show done")
-            }
-
-            Button(onClick = { filterMode = "UNDONE" }) {
-                Text("Show undone")
-            }
-
-            Button(onClick = { filterMode = "ALL" }) {
-                Text("Reset")
-            }
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -72,15 +40,7 @@ fun HomeScreen() {
         Button(
             onClick = {
                 if (newTaskTitle.isNotBlank()) {
-                    val newTask = Task(
-                        id = tasks.size + 1,
-                        title = newTaskTitle,
-                        description = "",
-                        priority = 1,
-                        dueDate = LocalDate.now().plusDays(1),
-                        done = false
-                    )
-                    tasks = addTask(tasks, newTask)
+                    taskViewModel.addTask(newTaskTitle)
                     newTaskTitle = ""
                 }
             },
@@ -92,7 +52,7 @@ fun HomeScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         // 📋 TASK LISTA
-        visibleTasks.forEach { task ->
+        tasks.forEach { task ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -102,7 +62,7 @@ fun HomeScreen() {
                 Text(task.title)
 
                 Button(onClick = {
-                    tasks = toggleDone(tasks, task.id)
+                    taskViewModel.toggleDone(task.id)
                 }) {
                     Text(if (task.done) "Undo" else "Done")
                 }
