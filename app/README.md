@@ -1,14 +1,24 @@
-# Viikkotehtävä 1
+Jetpack Compose käyttää deklaratiivista ui-mallia, jossa käyttöliittymä on suoraan sidottu state tilaan.
+Kun tila muuttuu, compose piirtää käyttöliittymän uudelleen automaattisesti (recomposition).
 
-## Domain
-Task-data class kuvaa yksittäistä tehtävää.
-Mock-data sisältää esimerkkitehtäviä.
+ominaisuudet
+-
+Tehtävän lisääminen
 
-## Funktiot
-- addTask: lisää uuden taskin listaan
-- toggleDone: vaihtaa taskin done-tilan
-- filterByDone: suodattaa tehdyt/tekemättömät
-- sortByDueDate: lajittelee tehtävät päivämäärän mukaan
+Tehtävän merkitseminen tehdyksi
 
-## UI
-HomeScreen näyttää otsikon ja mock-taskit Compose Columnissa.
+Tehtävän poistaminen
+
+Suodatus (tehdyt / tekemättömät)
+
+Järjestäminen deadline-päivän mukaan
+
+Reaktiivinen UI (LazyColumn)
+
+Arkkitehtuuri
+-
+MVVM
+
+ViewModel hallitsee tilan
+
+Compose toimii näkymänä
